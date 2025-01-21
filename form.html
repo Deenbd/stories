@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>দ্বীন স্টোরিতে লেখা পাঠাও</title>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100%;
+            margin: 0;
+            font-family: atma;
+        }
+
+        form {
+            background-color: #d1d1d1;
+            padding: 20px;
+            margin-top: 75%;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width:500px;
+        }
+
+        .field {
+            margin-bottom: 10px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .field input, .field textarea, .field select {
+            display: block;
+            width: 100%;
+            line-height: 1.5;
+            font-size: 14px;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 30px;
+            font-size: 14px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        input[type="submit"]:disabled {
+            background-color: #6bd56f;
+            cursor: not-allowed;
+        }
+
+        input[type="submit"]:hover:enabled {
+            background-color: #45a049;
+        }
+
+        img {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form id="form">
+        <div id="gif">
+            <img src="https://i.ibb.co.com/9s331Ph/send-text.gif">
+        </div>
+        <div class="field">
+            <label for="from_name">নাম:</label>
+            <input type="text" name="from_name" id="from_name" required>
+        </div>
+        <div class="field">
+            <label for="email">ইমেইল:</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+        <div class="field">
+            <label for="phone">ফোন নাম্বার (ঐচ্ছিক):</label>
+            <input type="text" name="phone" id="phone">
+        </div>
+        <div class="field">
+            <label for="date">তারিখ:</label>
+            <input type="date" name="date" id="date" required>
+        </div>
+        <div class="field">
+            <label for="kud">আপনার লেখাটি একটি:</label>
+            <select name="kud" id="kud" required>
+                <option value="বড় গল্প">বড় গল্প</option>
+                <option value="ছোট গল্প">ছোট গল্প</option>
+                <option value="উপন্যাস">উপন্যাস</option>
+                <option value="সায়েন্স ফিকশন/ফ্যান্টাসি">সায়েন্স ফিকশন/ফ্যান্টাসি</option>
+                <option value="ব্যক্তিগত প্রবন্ধ">ব্যক্তিগত প্রবন্ধ</option>
+                <option value="বৈজ্ঞানিক বা গবেষণাধর্মী প্রবন্ধ">বৈজ্ঞানিক বা গবেষণাধর্মী প্রবন্ধ</option>
+                <option value="গীতিকবিতা">গীতিকবিতা</option>
+                <option value="বর্ণনামূলক কবিতা">বর্ণনামূলক কবিতা</option>
+                <option value="ছড়া">ছড়া</option>
+                <option value="নাটক">নাটক</option>
+                <option value="প্রবন্ধ">প্রবন্ধ</option>
+                <option value="নিবন্ধ">নিবন্ধ</option>
+                <option value="সাংবাদিক প্রবন্ধ">সাংবাদিক প্রবন্ধ</option>
+                <option value="রিপোর্ট">রিপোর্ট</option>
+                <option value="নন-ফিকশন">নন-ফিকশন</option>
+                <option value="ঘটনা">ঘটনা</option>
+                <option value="কবিতা">কবিতা</option>
+                <option value="অন্যান্য">অন্যান্য</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="message">আপনার লেখা:</label>
+            <textarea name="message" id="message" rows="5" required></textarea>
+        </div>
+        <div class="field">
+            <label for="comment">কমেন্ট (ঐচ্ছিক):</label>
+            <input type="text" name="comment" id="comment">
+        </div>
+        <div class="field">
+            <label>
+            <input type="checkbox" id="copyrightAgree" onchange="toggleSubmitButton()">
+            আমি নিশ্চিত যে আমার লেখায় কোন ইসলাম বিরোধী অংশ নেই এবং আমি রাজি আছি যে আমার লেখায় দ্বীন স্টোরি কপিরাইট দিতে পারবে।
+            </label>
+        </div>
+        <div class="field">
+            <input type="submit" id="button" value="পাঠাও!" disabled>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        function toggleSubmitButton() {
+            const checkbox = document.getElementById('copyrightAgree');
+            const submitButton = document.getElementById('button');
+            submitButton.disabled = !checkbox.checked;
+        }
+
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const btn = document.getElementById('button');
+            btn.value = 'পাঠানো হচ্ছে...';
+
+            const formData = new FormData(this);
+
+            fetch('https://script.google.com/macros/s/AKfycbxt1ITuiidria0OV0Wo0696CRSquJDr-41tLghqgphpdfjw1Xu3ScI1feHHbfTDtc6uBA/exec', { 
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                btn.value = 'পাঠাও!';
+                alert('আপনার লেখা পাঠানো হয়েছে!');
+            })
+            .catch(error => {
+                btn.value = 'পাঠাও!';
+                alert('ত্রুটি ঘটেছে। আবার চেষ্টা করুন!', error);
+            });
+        });
+    </script>
+</body>
+</html>

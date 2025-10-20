@@ -3,170 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>দ্বীন স্টোরি - সর্বশেষ লেখা</title>
+    <title>দ্বীন স্টোরিতে লেখা পাঠাও</title>
+
     <style>
         body {
-            font-family: 'SolaimanLipi', 'Kalpurush', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: 'Atma', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f5f5f5;
+            box-sizing: border-box;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        form {
+            background-color: #d1d1d1;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 30px;
+            margin-top: 30px;
+        }
+
+        .field {
+            margin-bottom: 10px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .field input, .field textarea, .field select {
+            display: block;
+            width: 100%;
+            line-height: 1.5;
+            font-size: 14px;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: 'Atma', sans-serif;
+        }
+
+        .field textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 30px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            font-family: 'Atma', sans-serif;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        input[type="submit"]:hover:enabled {
+            background-color: #45a049;
+        }
+
+        img {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 10px;
             border-radius: 8px;
         }
 
-        .loading {
-            text-align: center;
-            padding: 50px;
-            color: #666;
-            font-size: 18px;
-        }
-
-        .error {
-            text-align: center;
-            padding: 30px;
-            color: #d32f2f;
-            background-color: #ffebee;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-
-        .post-title {
-            font-size: 32px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: #555;
             line-height: 1.4;
         }
 
-        .post-date {
-            font-size: 14px;
-            color: #777;
-            margin-bottom: 30px;
+        .checkbox-label input[type="checkbox"] {
+            margin-top: 3px;
+            width: auto;
+            flex-shrink: 0;
         }
 
-        .post-content {
-            font-size: 16px;
-            line-height: 1.8;
-            color: #444;
-            margin-bottom: 40px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        .post-footer {
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .author-name {
-            font-weight: bold;
-            color: #333;
-        }
-
-        .refresh-btn {
-            display: inline-block;
-            padding: 10px 20px;
+        .success-message {
+            display: none;
             background-color: #4CAF50;
             color: white;
-            border: none;
+            padding: 15px;
             border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            margin: 20px 0;
-            text-decoration: none;
+            text-align: center;
+            margin-top: 15px;
         }
 
-        .refresh-btn:hover {
-            background-color: #45a049;
+        .error-message {
+            display: none;
+            background-color: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <button class="refresh-btn" onclick="loadLatestPost()">🔄 রিফ্রেশ করুন</button>
-        
-        <div id="loading" class="loading">
-            লোড হচ্ছে...
+    <form id="form">
+        <div id="gif">
+            <img src="send text.gif" alt="Send Text">
         </div>
-
-        <div id="error" class="error" style="display: none;">
-            কোনো লেখা পাওয়া যায়নি অথবা একটি ত্রুটি ঘটেছে।
+        <div class="field">
+            <label for="from_name">নাম: *</label>
+            <input type="text" name="from_name" id="from_name" required>
         </div>
-
-        <div id="post-container" style="display: none;">
-            <h1 class="post-title" id="postTitle"></h1>
-            <p class="post-date" id="postDate"></p>
-            
-            <div class="post-content" id="postContent"></div>
-            
-            <div class="post-footer">
-                <p>- লেখক: <span class="author-name" id="authorName"></span></p>
-                <p id="footerDate"></p>
-            </div>
+        <div class="field">
+            <label for="email">ইমেইল: *</label>
+            <input type="email" name="email" id="email" required>
         </div>
-    </div>
+        <div class="field">
+            <label for="phone">ফোন নাম্বার (ঐচ্ছিক):</label>
+            <input type="text" name="phone" id="phone">
+        </div>
+        <div class="field">
+            <label for="sname">আপনার লেখার শিরোনাম: *</label>
+            <input type="text" name="sname" id="sname" required>
+        </div>
+        <div class="field">
+            <label for="kud">আপনার লেখাটি একটি: *</label>
+            <select name="kud" id="kud" required>
+                <option value="">-- নির্বাচন করুন --</option>
+                <option value="বড় গল্প">বড় গল্প</option>
+                <option value="ছোট গল্প">ছোট গল্প</option>
+                <option value="উপন্যাস">উপন্যাস</option>
+                <option value="সায়েন্স ফিকশন/ফ্যান্টাসি">সায়েন্স ফিকশন/ফ্যান্টাসি</option>
+                <option value="ব্যক্তিগত প্রবন্ধ">ব্যক্তিগত প্রবন্ধ</option>
+                <option value="বৈজ্ঞানিক বা গবেষণাধর্মী প্রবন্ধ">বৈজ্ঞানিক বা গবেষণাধর্মী প্রবন্ধ</option>
+                <option value="গীতিকবিতা">গীতিকবিতা</option>
+                <option value="বর্ণনামূলক কবিতা">বর্ণনামূলক কবিতা</option>
+                <option value="ছড়া">ছড়া</option>
+                <option value="নাটক">নাটক</option>
+                <option value="প্রবন্ধ">প্রবন্ধ</option>
+                <option value="নিবন্ধ">নিবন্ধ</option>
+                <option value="সাংবাদিক প্রবন্ধ">সাংবাদিক প্রবন্ধ</option>
+                <option value="রিপোর্ট">রিপোর্ট</option>
+                <option value="নন-ফিকশন">নন-ফিকশন</option>
+                <option value="ঘটনা">ঘটনা</option>
+                <option value="কবিতা">কবিতা</option>
+                <option value="অন্যান্য">অন্যান্য</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="message">আপনার লেখা: *</label>
+            <textarea name="message" id="message" rows="8" required></textarea>
+        </div>
+        <div class="field">
+            <label for="comment">কমেন্ট (ঐচ্ছিক):</label>
+            <input type="text" name="comment" id="comment">
+        </div>
+        <div class="field">
+            <label class="checkbox-label">
+                <input type="checkbox" id="copyrightAgree" onchange="toggleSubmitButton()">
+                <span>আমি নিশ্চিত যে আমার লেখায় কোন ইসলাম বিরোধী অংশ নেই এবং আমি রাজি আছি যে আমার লেখায় দ্বীন স্টোরি কপিরাইট দিতে পারবে।</span>
+            </label>
+        </div>
+        <div class="field">
+            <input type="submit" id="button" value="পাঠাও!" disabled>
+        </div>
+        <div class="success-message" id="successMessage">
+            ✓ আপনার লেখা সফলভাবে পাঠানো হয়েছে!
+        </div>
+        <div class="error-message" id="errorMessage">
+            ✗ ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।
+        </div>
+    </form>
 
-    <script>
-        // এখানে তোমার Google Apps Script Web App URL দাও
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8iWjhZG8m6ezlP_Fn8hknnjrfcYoXt0e3tJPXn5kZmKJ8UFczsOCtaqXa0D84mkbXcQ/exec';
+    <script type="text/javascript">
 
-        function formatDate(timestamp) {
-            const date = new Date(timestamp);
-            const months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 
-                          'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
-            
-            const day = date.getDate();
-            const month = months[date.getMonth()];
-            const year = date.getFullYear();
-            
-            return `${month} ${day}, ${year}`;
+        function toggleSubmitButton() {
+            const checkbox = document.getElementById('copyrightAgree');
+            const submitButton = document.getElementById('button');
+            submitButton.disabled = !checkbox.checked;
         }
 
-        function loadLatestPost() {
-            const loading = document.getElementById('loading');
-            const error = document.getElementById('error');
-            const postContainer = document.getElementById('post-container');
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const btn = document.getElementById('button');
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+            
+            // Messages hide করো
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            
+            // Button disable এবং text change
+            btn.disabled = true;
+            btn.value = 'পাঠানো হচ্ছে...';
 
-            // Reset display
-            loading.style.display = 'block';
-            error.style.display = 'none';
-            postContainer.style.display = 'none';
+            const formData = new FormData(this);
 
-            fetch(SCRIPT_URL)
-                .then(response => response.json())
-                .then(data => {
-                    loading.style.display = 'none';
+            // **এখানে তোমার নতুন Google Apps Script URL দাও**
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbz3QZM4lFBc9fr-CQ3LaLI-Kt5vTkcMHeNasfiZ_y1d1J1XY8ahmUOCYpHD0BFyDfH0hA/exec';
 
-                    if (data.status === 'success') {
-                        document.getElementById('postTitle').textContent = data.title;
-                        document.getElementById('postDate').textContent = formatDate(data.timestamp);
-                        document.getElementById('postContent').textContent = data.content;
-                        document.getElementById('authorName').textContent = data.name;
-                        document.getElementById('footerDate').textContent = formatDate(data.timestamp);
-                        
-                        postContainer.style.display = 'block';
-                    } else {
-                        error.style.display = 'block';
-                    }
-                })
-                .catch(err => {
-                    console.error('Error:', err);
-                    loading.style.display = 'none';
-                    error.style.display = 'block';
-                });
-        }
-
-        // পেজ লোড হলে অটোমেটিক লেখা লোড করো
-        window.addEventListener('DOMContentLoaded', loadLatestPost);
+            fetch(scriptURL, { 
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors' // এটা CORS issue solve করবে
+            })
+            .then(response => {
+                // Success message দেখাও
+                successMsg.style.display = 'block';
+                btn.value = 'পাঠাও!';
+                
+                // Form reset করো
+                document.getElementById('form').reset();
+                document.getElementById('copyrightAgree').checked = false;
+                toggleSubmitButton();
+                
+                // 5 second পর message hide করো
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 5000);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = '✗ ত্রুটি ঘটেছে: ' + error.message;
+                btn.value = 'পাঠাও!';
+                btn.disabled = false;
+                
+                // 5 second পর message hide করো
+                setTimeout(() => {
+                    errorMsg.style.display = 'none';
+                }, 5000);
+            });
+        });
     </script>
 </body>
 </html>

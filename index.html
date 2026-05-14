@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>দ্বীন স্টোরিতে লেখা পাঠাও</title>
-
     <style>
         body {
             display: flex;
@@ -80,7 +79,7 @@
             background-color: #45a049;
         }
 
-        img {
+        img.banner {
             width: 100%;
             max-width: 500px;
             margin-bottom: 10px;
@@ -121,29 +120,59 @@
             text-align: center;
             margin-top: 15px;
         }
+
+        .image-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .image-option-radio {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .image-option-radio input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+
+        #imageUrlField {
+            display: none;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
     <form id="form">
         <div id="gif">
-            <img src="send text.gif" alt="Send Text">
+            <img class="banner" src="send text.gif" alt="Send Text">
         </div>
+
         <div class="field">
-            <label for="from_name">নাম: *</label>
+            <label for="from_name">পুরো নাম: *</label>
             <input type="text" name="from_name" id="from_name" required>
         </div>
+
         <div class="field">
             <label for="email">ইমেইল: *</label>
             <input type="email" name="email" id="email" required>
         </div>
+
         <div class="field">
             <label for="phone">ফোন নাম্বার (ঐচ্ছিক):</label>
             <input type="text" name="phone" id="phone">
         </div>
+
         <div class="field">
             <label for="sname">আপনার লেখার শিরোনাম: *</label>
             <input type="text" name="sname" id="sname" required>
         </div>
+
         <div class="field">
             <label for="kud">আপনার লেখাটি একটি: *</label>
             <select name="kud" id="kud" required>
@@ -168,25 +197,51 @@
                 <option value="অন্যান্য">অন্যান্য</option>
             </select>
         </div>
+
+        <div class="field">
+            <label>লেখার সাথে ছবি: *</label>
+            <div class="image-options">
+                <label class="image-option-radio">
+                    <input type="radio" name="image_option" value="url" onchange="handleImageOption(this.value)" required>
+                    আমি ছবির URL দিচ্ছি
+                </label>
+                <label class="image-option-radio">
+                    <input type="radio" name="image_option" value="admin" onchange="handleImageOption(this.value)">
+                    অ্যাডমিন ছবি দিক (আমি রাজি)
+                </label>
+                <label class="image-option-radio">
+                    <input type="radio" name="image_option" value="none" onchange="handleImageOption(this.value)">
+                    ছবি লাগবে না
+                </label>
+            </div>
+            <div id="imageUrlField">
+                <input type="url" name="image_url" id="image_url" placeholder="https://example.com/image.jpg">
+            </div>
+        </div>
+
         <div class="field">
             <label for="message">আপনার লেখা: *</label>
             <textarea name="message" id="message" rows="8" required></textarea>
         </div>
+
         <div class="field">
             <label for="comment">কমেন্ট (ঐচ্ছিক):</label>
             <input type="text" name="comment" id="comment">
         </div>
+
         <div class="field">
             <label class="checkbox-label">
                 <input type="checkbox" id="copyrightAgree" onchange="toggleSubmitButton()">
-                <span>আমি দ্বীন স্টোরিসে সাবক্রাইব করছি। আমি নিশ্চিত যে আমার লেখায় কোন ইসলাম বিরোধী অংশ নেই এবং আমি রাজি আছি যে আমার লেখায় দ্বীন স্টোরি কপিরাইট দিতে পারবে।</span>
+                <span>আমি দ্বীন স্টোরিসে সাবস্ক্রাইব করছি। আমি নিশ্চিত যে আমার লেখায় কোনো ইসলাম বিরোধী অংশ নেই এবং আমি রাজি আছি যে আমার লেখায় দ্বীন স্টোরি কপিরাইট দিতে পারবে।</span>
             </label>
         </div>
+
         <div class="field">
             <input type="submit" id="button" value="পাঠাও!" disabled>
         </div>
+
         <div class="success-message" id="successMessage">
-            আপনার লেখা সফলভাবে পাঠানো হয়েছে! আপনার ৫টি লেখা দ্বীন স্টোরিসে স্থান পেলে আপনাকে সরাসরি স্বীন স্টোরিসে লেখার সুযোগ দেওয়া হবে!
+            আপনার লেখা সফলভাবে পাঠানো হয়েছে! আপনার ৫টি লেখা দ্বীন স্টোরিসে স্থান পেলে আপনাকে সরাসরি দ্বীন স্টোরিসে লেখার সুযোগ দেওয়া হবে!
         </div>
         <div class="error-message" id="errorMessage">
             ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।
@@ -194,6 +249,18 @@
     </form>
 
     <script type="text/javascript">
+        function handleImageOption(value) {
+            const urlField = document.getElementById('imageUrlField');
+            const urlInput = document.getElementById('image_url');
+            if (value === 'url') {
+                urlField.style.display = 'block';
+                urlInput.required = true;
+            } else {
+                urlField.style.display = 'none';
+                urlInput.required = false;
+                urlInput.value = '';
+            }
+        }
 
         function toggleSubmitButton() {
             const checkbox = document.getElementById('copyrightAgree');
@@ -203,43 +270,35 @@
 
         document.getElementById('form').addEventListener('submit', function(event) {
             event.preventDefault();
-            
+
             const btn = document.getElementById('button');
             const successMsg = document.getElementById('successMessage');
             const errorMsg = document.getElementById('errorMessage');
-            
-            // Messages hide করো
+
             successMsg.style.display = 'none';
             errorMsg.style.display = 'none';
-            
-            // Button disable এবং text change
+
             btn.disabled = true;
             btn.value = 'পাঠানো হচ্ছে...';
 
             const formData = new FormData(this);
+            formData.append('form_type', 'notun'); // নতুন লেখক চিহ্নিত করতে
 
-            // **এখানে তোমার নতুন Google Apps Script URL দাও**
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbz3QZM4lFBc9fr-CQ3LaLI-Kt5vTkcMHeNasfiZ_y1d1J1XY8ahmUOCYpHD0BFyDfH0hA/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwZevy7SuayiM-tMNMZzCFrcBhpBKblKPgt5xGlLzRIuQEcOUm-WC2RaFx6uBTvhpkzIA/exec';
 
-            fetch(scriptURL, { 
+            fetch(scriptURL, {
                 method: 'POST',
                 body: formData,
-                mode: 'no-cors' // এটা CORS issue solve করবে
+                mode: 'no-cors'
             })
             .then(response => {
-                // Success message দেখাও
                 successMsg.style.display = 'block';
                 btn.value = 'পাঠাও!';
-                
-                // Form reset করো
                 document.getElementById('form').reset();
                 document.getElementById('copyrightAgree').checked = false;
+                document.getElementById('imageUrlField').style.display = 'none';
                 toggleSubmitButton();
-                
-                // 5 second পর message hide করো
-                setTimeout(() => {
-                    successMsg.style.display = 'none';
-                }, 5000);
+                setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -247,11 +306,7 @@
                 errorMsg.textContent = '✗ ত্রুটি ঘটেছে: ' + error.message;
                 btn.value = 'পাঠাও!';
                 btn.disabled = false;
-                
-                // 5 second পর message hide করো
-                setTimeout(() => {
-                    errorMsg.style.display = 'none';
-                }, 5000);
+                setTimeout(() => { errorMsg.style.display = 'none'; }, 5000);
             });
         });
     </script>

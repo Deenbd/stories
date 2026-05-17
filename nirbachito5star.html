@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>দ্বীন স্টোরিতে লেখা পাঠাও</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: 'Atma', sans-serif;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        form {
+            background-color: #d1d1d1;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 30px;
+            margin-top: 30px;
+        }
+
+        .field {
+            margin-bottom: 10px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .field input, .field textarea, .field select {
+            display: block;
+            width: 100%;
+            line-height: 1.5;
+            font-size: 14px;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: 'Atma', sans-serif;
+        }
+
+        .field textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 30px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            font-family: 'Atma', sans-serif;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        input[type="submit"]:hover:enabled {
+            background-color: #45a049;
+        }
+
+        img.banner {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            margin-top: 3px;
+            width: auto;
+            flex-shrink: 0;
+        }
+
+        .success-message {
+            display: none;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .error-message {
+            display: none;
+            background-color: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .image-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .image-option-radio {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .image-option-radio input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+
+        #imageUrlField {
+            display: none;
+            margin-top: 8px;
+        }
+
+        .nirbachito-badge {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 13px;
+            margin: -20px -20px 15px -20px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .notice-box {
+            background-color: #fff8e1;
+            border-left: 4px solid #f9a825;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .why-link {
+            color: #1976d2;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: 4px;
+            background: none;
+            border: none;
+            padding: 0;
+            font-family: 'Atma', sans-serif;
+        }
+
+        /* Popup */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.45);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+        }
+
+        .popup-box {
+            background: white;
+            border-radius: 12px;
+            padding: 28px 24px;
+            max-width: 360px;
+            width: 90%;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+            font-size: 14px;
+            color: #444;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .popup-box p {
+            margin: 0 0 20px 0;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn-baad {
+            padding: 9px 22px;
+            background-color: #e53935;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Atma', sans-serif;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-sob {
+            padding: 9px 22px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Atma', sans-serif;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-baad:hover { background-color: #c62828; }
+        .btn-sob:hover  { background-color: #45a049; }
+
+        .congrats-msg {
+            display: none;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+            font-size: 15px;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- কেন? Popup -->
+    <div class="popup-overlay" id="whyPopup">
+        <div class="popup-box">
+            <p>একটি বিশেষ পরিসংখ্যানের তথ্যযোগানের উদ্দেশ্যে জন্মস্থান ও জন্মতারিখ জানতে চাওয়া হয়েছে। এই তথ্য সম্পূর্ণ গোপন রাখা হবে এবং শুধুমাত্র পরিসংখ্যানের কাজে ব্যবহৃত হবে। </p>
+            <div class="popup-buttons">
+                <button class="btn-baad" onclick="chooseOption('baad')">বাদ দিন</button>
+                <button class="btn-sob"  onclick="chooseOption('sob')">সব দিন</button>
+            </div>
+        </div>
+    </div>
+
+    <form id="form">
+        <div class="nirbachito-badge">✦ নির্বাচিত লেখক প্যানেল ✦</div>
+
+
+
+        <!-- GIF ব্যানার -->
+        <div id="gif">
+            <img class="banner" src="send text.gif" alt="Send Text">
+        </div>
+
+        <!-- ছবির নিচের নোটিস -->
+        <div class="notice-box" id="bottomNotice">
+            যাদের কমপক্ষে ৫টি লেখা দ্বীন স্টোরিসে প্রকাশিত হয়েছে, তাদের জন্য <strong>৬ষ্ঠ বার</strong> এই ফর্ম পূরণ করা লাগবে। এর পর থেকে শুধু নাম, শিরোনাম, ধরণ, ছবি, লেখা ও মন্তব্য দিলেই হবে।
+        </div>
+
+        <!-- অভিনন্দন বার্তা -->
+        <div class="congrats-msg" id="congratsMsg"></div>
+
+        <!-- নাম -->
+        <div class="field">
+            <label for="from_name">পুরো নাম: *</label>
+            <input type="text" name="from_name" id="from_name" required oninput="checkTrustedAuthor()">
+        </div>
+
+        <!-- এক্সট্রা ফিল্ড: নতুন/৬ষ্ঠবার লেখকের জন্য -->
+        <div id="extraFields">
+
+            <div class="field">
+                <label for="email">ইমেইল: *</label>
+                <input type="email" name="email" id="email" required>
+            </div>
+
+            <div class="field">
+                <label for="phone">ফোন নাম্বার (ঐচ্ছিক):</label>
+                <input type="text" name="phone" id="phone">
+            </div>
+
+            <div class="field">
+                <label for="address">ঠিকানা: *</label>
+                <textarea name="address" id="address" rows="3" required placeholder="বাড়ি/গ্রাম, উপজেলা, জেলা, বিভাগ"></textarea>
+            </div>
+
+            <!-- জন্মস্থান ও জন্মতারিখ -->
+            <div class="field">
+                <label for="birthplace">
+                    জন্মভবন বা হাসপাতালের নাম:
+                    <button type="button" class="why-link" onclick="showWhyPopup()">কেন?</button>
+                </label>
+                <input type="text" name="birthplace" id="birthplace">
+
+                <label for="birthdate" style="margin-top: 10px; display: block;">
+                    জন্মতারিখ:
+                    <button type="button" class="why-link" onclick="showWhyPopup()">কেন?</button>
+                </label>
+                <input type="date" name="birthdate" id="birthdate">
+            </div>
+
+        </div>
+        <!-- extraFields শেষ -->
+
+        <!-- লেখার শিরোনাম -->
+        <div class="field">
+            <label for="sname">আপনার লেখার শিরোনাম: *</label>
+            <input type="text" name="sname" id="sname" required>
+        </div>
+
+        <!-- লেখার ধরণ -->
+        <div class="field">
+            <label for="kud">আপনার লেখাটি একটি: *</label>
+            <select name="kud" id="kud" required>
+                <option value="">-- নির্বাচন করুন --</option>
+                <option value="বড় গল্প">বড় গল্প</option>
+                <option value="ছোট গল্প">ছোট গল্প</option>
+                <option value="উপন্যাস">উপন্যাস</option>
+                <option value="সায়েন্স ফিকশন/ফ্যান্টাসি">সায়েন্স ফিকশন/ফ্যান্টাসি</option>
+                <option value="ব্যক্তিগত প্রবন্ধ">ব্যক্তিগত প্রবন্ধ</option>
+                <option value="বৈজ্ঞানিক বা গবেষণাধর্মী প্রবন্ধ">বৈজ্ঞানিক বা গবেষণাধর্মী প্রবন্ধ</option>
+                <option value="গীতিকবিতা">গীতিকবিতা</option>
+                <option value="বর্ণনামূলক কবিতা">বর্ণনামূলক কবিতা</option>
+                <option value="ছড়া">ছড়া</option>
+                <option value="নাটক">নাটক</option>
+                <option value="প্রবন্ধ">প্রবন্ধ</option>
+                <option value="নিবন্ধ">নিবন্ধ</option>
+                <option value="সাংবাদিক প্রবন্ধ">সাংবাদিক প্রবন্ধ</option>
+                <option value="রিপোর্ট">রিপোর্ট</option>
+                <option value="নন-ফিকশন">নন-ফিকশন</option>
+                <option value="ঘটনা">ঘটনা</option>
+                <option value="কবিতা">কবিতা</option>
+                <option value="ভ্রমণকাহিনী">ভ্রমণকাহিনী</option>
+                <option value="অন্যান্য">অন্যান্য</option>
+            </select>
+        </div>
+
+        <!-- ছবি -->
+        <div class="field">
+            <label>লেখার সাথে ছবি: *</label>
+            <div class="image-options">
+                <label class="image-option-radio">
+                    <input type="radio" name="image_option" value="url" onchange="handleImageOption(this.value)" required>
+                    আমি ছবির URL দিচ্ছি
+                </label>
+                <label class="image-option-radio">
+                    <input type="radio" name="image_option" value="admin" onchange="handleImageOption(this.value)">
+                    অ্যাডমিন ছবি দিক (আমি রাজি)
+                </label>
+                <label class="image-option-radio">
+                    <input type="radio" name="image_option" value="none" onchange="handleImageOption(this.value)">
+                    ছবি লাগবে না
+                </label>
+            </div>
+            <div id="imageUrlField">
+                <input type="url" name="image_url" id="image_url" placeholder="https://example.com/image.jpg">
+            </div>
+        </div>
+
+        <!-- লেখা -->
+        <div class="field">
+            <label for="message">আপনার লেখা: *</label>
+            <textarea name="message" id="message" rows="8" required></textarea>
+        </div>
+
+        <!-- মন্তব্য -->
+        <div class="field">
+            <label for="comment">মন্তব্য (ঐচ্ছিক):</label>
+            <input type="text" name="comment" id="comment">
+        </div>
+
+        <!-- কপিরাইট -->
+        <div class="field">
+            <label class="checkbox-label">
+                <input type="checkbox" id="copyrightAgree" onchange="toggleSubmitButton()">
+                <span>আমি দ্বীন স্টোরিসে সাবস্ক্রাইব করছি। আমি নিশ্চিত যে আমার লেখায় কোনো ইসলাম বিরোধী অংশ নেই এবং আমি রাজি আছি যে আমার লেখায় দ্বীন স্টোরি কপিরাইট দিতে পারবে।</span>
+            </label>
+        </div>
+
+        <div class="field">
+            <input type="submit" id="button" value="পাঠাও!" disabled>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            আপনার লেখা সফলভাবে পাঠানো হয়েছে এবং ব্লগে প্রকাশিত হয়েছে!
+        </div>
+        <div class="error-message" id="errorMessage">
+            ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।
+        </div>
+    </form>
+
+    <script type="text/javascript">
+
+        // ══════════════════════════════════════════════════════
+        // ✦ Trusted লেখকদের নাম এখানে যোগ করুন ✦
+        // কেউ ৬ষ্ঠ বার ফর্ম পূরণ করলে তার নাম এই array-তে লিখুন
+        // তারপর ৭ম বার নাম দিলেই সে সহজ ফর্ম ও অভিনন্দন পাবে
+        // ══════════════════════════════════════════════════════
+        const trustedAuthors = [
+            // 'মোহাম্মদ আবদুল্লাহ',
+            // 'ফাতিমা বিনতে করিম',
+        ];
+        // ══════════════════════════════════════════════════════
+
+        let isTrusted = false;
+
+        function checkTrustedAuthor() {
+            const nameVal = document.getElementById('from_name').value.trim();
+            const extraFields  = document.getElementById('extraFields');
+            const congratsMsg  = document.getElementById('congratsMsg');
+            const bottomNotice = document.getElementById('bottomNotice');
+            const emailInput   = document.getElementById('email');
+            const addressInput = document.getElementById('address');
+
+            const matched = trustedAuthors.some(n => n === nameVal);
+
+            if (matched && !isTrusted) {
+                isTrusted = true;
+                extraFields.style.display  = 'none';
+                emailInput.required        = false;
+                addressInput.required      = false;
+                bottomNotice.style.display = 'none';
+                congratsMsg.style.display  = 'block';
+                congratsMsg.innerHTML = '🎉 অভিনন্দন, <strong>' + nameVal + '</strong>!<br>আপনি এখন সরাসরি লেখা পাঠাতে পারবেন।';
+
+            } else if (!matched && isTrusted) {
+                isTrusted = false;
+                extraFields.style.display  = 'block';
+                emailInput.required        = true;
+                addressInput.required      = true;
+                bottomNotice.style.display = 'block';
+                congratsMsg.style.display  = 'none';
+            }
+        }
+
+        function showWhyPopup() {
+            document.getElementById('whyPopup').classList.add('active');
+        }
+
+        function chooseOption(choice) {
+            document.getElementById('whyPopup').classList.remove('active');
+            const birthplace = document.getElementById('birthplace');
+            const birthdate  = document.getElementById('birthdate');
+            if (choice === 'sob') {
+                birthplace.required = true;
+                birthdate.required  = true;
+            } else {
+                birthplace.required = false;
+                birthdate.required  = false;
+            }
+        }
+
+        function handleImageOption(value) {
+            const urlField = document.getElementById('imageUrlField');
+            const urlInput = document.getElementById('image_url');
+            if (value === 'url') {
+                urlField.style.display = 'block';
+                urlInput.required = true;
+            } else {
+                urlField.style.display = 'none';
+                urlInput.required = false;
+                urlInput.value = '';
+            }
+        }
+
+        function toggleSubmitButton() {
+            const checkbox = document.getElementById('copyrightAgree');
+            document.getElementById('button').disabled = !checkbox.checked;
+        }
+
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const btn        = document.getElementById('button');
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg   = document.getElementById('errorMessage');
+
+            successMsg.style.display = 'none';
+            errorMsg.style.display   = 'none';
+            btn.disabled = true;
+            btn.value    = 'পাঠানো হচ্ছে...';
+
+            const formData = new FormData(this);
+            formData.append('form_type', 'nirbachito');
+
+            // ══════════════════════════════════════════
+            // ✦ নির্বাচিত লেখকদের GS Script URL দিন ✦
+            // ══════════════════════════════════════════
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbypXU7V_pf3aCd5gO37uyBF8CQbe_Q9quEPk4W-TU4XbM_ov--qPq9rSUki_C4tlaVhfQ/exec';
+
+            fetch(scriptURL, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            })
+            .then(() => {
+                successMsg.style.display = 'block';
+                btn.value = 'পাঠাও!';
+                this.reset();
+                document.getElementById('copyrightAgree').checked = false;
+                document.getElementById('imageUrlField').style.display = 'none';
+                document.getElementById('congratsMsg').style.display   = 'none';
+                document.getElementById('bottomNotice').style.display = 'block';
+                document.getElementById('extraFields').style.display  = 'block';
+                document.getElementById('email').required   = true;
+                document.getElementById('address').required = true;
+                isTrusted = false;
+                toggleSubmitButton();
+                setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
+            })
+            .catch(error => {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent   = '✗ ত্রুটি ঘটেছে: ' + error.message;
+                btn.value    = 'পাঠাও!';
+                btn.disabled = false;
+                setTimeout(() => { errorMsg.style.display = 'none'; }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>
